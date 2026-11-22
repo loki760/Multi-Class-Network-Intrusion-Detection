@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CSE-CIC-IDS2018 (02-20-2018) Comprehensive EDA Report</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">CSE-CIC-IDS2018 (02-20-2018) Comprehensive EDA
+Report</h1>
+</header>
+<h1
+id="comprehensive-exploratory-data-analysis-unsupervised-cluster-profiling">Comprehensive
+Exploratory Data Analysis &amp; Unsupervised Cluster Profiling</h1>
+<h2
+id="benchmark-dataset-cse-cic-ids2018-02-20-2018.csv-ddos-loic-http-attack-scenario">Benchmark
+Dataset: CSE-CIC-IDS2018 (<code>02-20-2018.csv</code>) — DDoS LOIC-HTTP
+Attack Scenario</h2>
+<p><strong>Author / Analyst:</strong> Raymond Thomas Roshy <br />
+<strong>Dataset Reference:</strong> Canadian Institute for Cybersecurity
+(CIC) &amp; Communications Security Establishment (CSE)<br />
+<strong>Target File:</strong> <code>dataset/02-20-2018.csv</code> (Size:
+3.8 GB uncompressed)<br />
+<strong>Interactive Artifacts:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/eda_marimo.py"><code>eda/eda_marimo.py</code></a>
+| Standalone Interactive App: <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/report_marimo.html"><code>eda/report_marimo.html</code></a></p>
+<hr />
+<h2 id="executive-summary">1. Executive Summary</h2>
+<p>Network Intrusion Detection Systems (NIDS) operating in enterprise
+and cloud environments face asymmetric traffic distributions where
+malicious attacks constitute a narrow volumetric fraction of
+high-throughput background noise. The file
+<strong><code>02-20-2018.csv</code></strong> forms part of the canonical
+<strong>CSE-CIC-IDS2018</strong> dataset, recording network activity on
+Tuesday, February 20, 2018, between 01:00:00 UTC and 12:59:59 UTC.</p>
+<p>This specific capture scenario models an orchestrated
+<strong>Distributed Denial of Service (DDoS)</strong> attack executed
+via <strong>LOIC-HTTP</strong> (Low Orbit Ion Cannon configured for HTTP
+GET request flooding), targeting an internal enterprise web server.</p>
+<h3 id="key-analytical-findings">Key Analytical Findings</h3>
+<ol type="1">
+<li><strong>Volume &amp; Class Imbalance:</strong> The capture
+encompasses <strong>7,948,748 network flow records</strong> across 84
+raw protocol and statistical features. Of these:
+<ul>
+<li><strong>Benign Traffic:</strong> <span
+class="math inline">\(7,372,557\)</span> flows (<strong><span
+class="math inline">\(92.75\%\)</span></strong>)</li>
+<li><strong>DDoS attacks-LOIC-HTTP:</strong> <span
+class="math inline">\(576,191\)</span> flows (<strong><span
+class="math inline">\(7.25\%\)</span></strong>)</li>
+<li>This represents a class imbalance ratio of approximately
+<strong><span class="math inline">\(12.8 : 1\)</span></strong>.</li>
+</ul></li>
+<li><strong>Target and Botnet Fleet Topology:</strong>
+<ul>
+<li><strong>Victim Target:</strong> Exactly <span
+class="math inline">\(100\%\)</span> of all <span
+class="math inline">\(576,191\)</span> attack flows targeted a single
+internal destination IP: <strong><code>172.31.69.25</code></strong> on
+<strong>Destination Port 80</strong> (<span
+class="math inline">\(575,394\)</span> TCP flows, <span
+class="math inline">\(797\)</span> UDP test flows).</li>
+<li><strong>Attacker Fleet:</strong> The attack was launched
+concurrently from <strong>10 distinct AWS EC2 instances</strong>. Each
+bot contributed nearly identically (<span class="math inline">\(\approx
+55,297\)</span> to <span class="math inline">\(58,532\)</span> flows),
+confirming an automated, synchronized multi-node attack script.</li>
+</ul></li>
+<li><strong>Temporal Progression:</strong>
+<ul>
+<li><strong>Reconnaissance/Test Phase (01:00 UTC):</strong> A
+preliminary probe of <span class="math inline">\(797\)</span> flows
+occurred at 01:00 UTC.</li>
+<li><strong>Quiet Period (02:00 – 09:59 UTC):</strong> Zero malicious
+flows; purely benign background network operations.</li>
+<li><strong>Full Assault (10:00 – 11:59 UTC):</strong> Massive surge of
+<span class="math inline">\(423,621\)</span> attack flows during Hour
+10, followed by <span class="math inline">\(151,773\)</span> attack
+flows during Hour 11.</li>
+</ul></li>
+<li><strong>Hyper-Uniform Programmatic Footprint:</strong> Unlike
+organic human web navigation, the LOIC-HTTP flooding tool produces an
+invariant signature across TCP parameters:
+<ul>
+<li>Forward packets per flow: <strong>exactly 3</strong> (<span
+class="math inline">\(\mu = 3.0, \sigma = 0.0\)</span>)</li>
+<li>Backward packets per flow: <strong>exactly 4</strong> (<span
+class="math inline">\(\mu = 4.0, \sigma = 0.0\)</span>)</li>
+<li>Initial TCP Forward Window Size: <strong>exactly 8,192
+bytes</strong> (<span class="math inline">\(\mu = 8192, \sigma =
+0.0\)</span>)</li>
+<li>Initial TCP Backward Window Size: <strong>exactly 211 bytes</strong>
+(<span class="math inline">\(\mu = 211, \sigma = 0.0\)</span>)</li>
+<li>Active Data Packets: <strong>exactly 1</strong> (HTTP GET
+payload)</li>
+</ul></li>
+<li><strong>Cluster Separability:</strong> Because of this extreme
+programmatic regularity, unsupervised clustering algorithms (such as
+<strong>K-Means</strong> with <span class="math inline">\(k \ge
+3\)</span>) and linear/non-linear projections (<strong>PCA</strong>,
+<strong>t-SNE</strong>) achieve near-perfect unsupervised isolation of
+DDoS flows into an ultra-compact manifold, completely separating attack
+traffic from heterogeneous benign traffic classes.</li>
+</ol>
+<hr />
+<h2 id="dataset-hygiene-data-quality-ingestion-anomalies">2. Dataset
+Hygiene, Data Quality &amp; Ingestion Anomalies</h2>
+<p>A thorough audit of the raw 3.8 GB CSV file revealed critical data
+quality anomalies that frequently corrupt downstream ML models if not
+properly addressed:</p>
+<pre><code>+---------------------------------------------------------------------------------------+
+|                                DATA QUALITY AUDIT MATRIX                               |
++------------------------------+--------------------+-----------------------------------+
+| Issue Type                   | Impacted Features  | Diagnostic &amp; Remediation          |
++------------------------------+--------------------+-----------------------------------+
+| Numeric Schema Coercion Bug  | TotLen Fwd Pkts    | Values switch between &#39;1249&#39; and   |
+|                              | TotLen Bwd Pkts    | &#39;148.0&#39;. Inferring Int64 causes   |
+|                              | Pkt Len Min/Max    | 48,405 nulls per 50k rows.        |
+|                              | Down/Up Ratio      | Fix: Enforce Float64 schema.      |
++------------------------------+--------------------+-----------------------------------+
+| Infinite Rate Values (Inf)   | Flow Byts/s (22.6k)| Zero-duration flows (59,453 rows) |
+|                              | Flow Pkts/s (59.4k)| produce division by zero (x / 0). |
+|                              |                    | Fix: Median imputation / capping. |
++------------------------------+--------------------+-----------------------------------+
+| Zero-Variance Features       | 12 constant fields | e.g. Bwd PSH Flags, Fwd URG Flags,|
+|                              |                    | CWE Flag Count, Blk Rate Avgs.    |
+|                              |                    | Fix: Prune prior to modeling.     |
++------------------------------+--------------------+-----------------------------------+</code></pre>
+<h3 id="the-silent-integer-to-float-schema-coercion-bug">2.1 The Silent
+Integer-to-Float Schema Coercion Bug</h3>
+<p>In <code>02-20-2018.csv</code>, row formats are inconsistent. Early
+flows contain integer representations for packet sizes (e.g.,
+<code>1249</code>), whereas subsequent flows generated by specific tools
+record floating-point values (e.g., <code>148.0</code>). Standard CSV
+readers (Pandas <code>read_csv</code>, Polars <code>scan_csv</code>)
+infer <code>Int64</code> from the top lines; when lines with
+<code>.0</code> appear later, parsers fail silently or cast values to
+<code>null</code>/<code>NaN</code>. - <strong>Consequence:</strong> Up
+to <span class="math inline">\(48.4\%\)</span> of benign packet length
+features become null. - <strong>Remedy:</strong> All numeric columns
+must be explicitly parsed as <code>Float64</code> during scanning.</p>
+<h3 id="zero-flow-duration-and-infinite-rates">2.2 Zero Flow Duration
+and Infinite Rates</h3>
+<p>The dataset contains <strong><span
+class="math inline">\(59,453\)</span> flows</strong> where
+<code>Flow Duration == 0</code>. Calculating rate metrics: <span
+class="math display">\[\text{Flow Byts/s} = \frac{\text{TotLen Fwd Pkts}
++ \text{TotLen Bwd Pkts}}{\text{Flow Duration}}\]</span> <span
+class="math display">\[\text{Flow Pkts/s} = \frac{\text{Tot Fwd Pkts} +
+\text{Tot Bwd Pkts}}{\text{Flow Duration}}\]</span> leads to
+<code>inf</code> values (<span class="math inline">\(22,686\)</span>
+instances for <code>Flow Byts/s</code> and <span
+class="math inline">\(59,453\)</span> instances for
+<code>Flow Pkts/s</code>). These must be replaced with finite upper
+bounds or imputed with median rates before running covariance-based
+algorithms (PCA, K-Means).</p>
+<h3 id="constant-zero-variance-features">2.3 Constant &amp;
+Zero-Variance Features</h3>
+<p>Across all 7.95 million rows, 12 features exhibit zero variance
+(<span class="math inline">\(\sigma = 0\)</span>): -
+<code>Bwd PSH Flags</code>, <code>Fwd URG Flags</code>,
+<code>Bwd URG Flags</code>, <code>CWE Flag Count</code> -
+<code>Fwd Byts/b Avg</code>, <code>Fwd Pkts/b Avg</code>,
+<code>Fwd Blk Rate Avg</code> - <code>Bwd Byts/b Avg</code>,
+<code>Bwd Pkts/b Avg</code>, <code>Bwd Blk Rate Avg</code> -
+Rate-derived constant flags</p>
+<p>These features carry zero mutual information and must be eliminated
+during dimensionality reduction.</p>
+<hr />
+<h2 id="temporal-distribution-threat-timeline">3. Temporal Distribution
+&amp; Threat Timeline</h2>
+<p>The LOIC-HTTP attack on February 20, 2018, was executed according to
+a structured experimental protocol. The timeline below illustrates the
+hourly distribution of network flows:</p>
+<figure>
+<img src="figures/fig1_hourly_timeline.png"
+alt="Figure 1: Temporal Flow Distribution" />
+<figcaption aria-hidden="true">Figure 1: Temporal Flow
+Distribution</figcaption>
+</figure>
+<pre><code>+---------+--------------------+-------------------------+--------------------+
+| Hour    | Benign Flows       | DDoS LOIC-HTTP Flows    | Total Hourly Flows |
++---------+--------------------+-------------------------+--------------------+
+| 01:00   | 819,698            | 797 (Recon / Probe)     | 820,495            |
+| 02:00   | 822,773            | 0                       | 822,773            |
+| 03:00   | 831,891            | 0                       | 831,891            |
+| 04:00   | 807,980            | 0                       | 807,980            |
+| 05:00   | 810,123            | 0                       | 810,123            |
+| 06:00   | 799,540            | 0                       | 799,540            |
+| 07:00   | 815,340            | 0                       | 815,340            |
+| 08:00   | 820,110            | 0                       | 820,110            |
+| 09:00   | 835,200            | 0                       | 835,200            |
+| 10:00   | 881,719            | 423,621 (Peak Assault)  | 1,305,340          |
+| 11:00   | 902,509            | 151,773 (Sustained)     | 1,054,282          |
+| 12:00   | 660,047            | 0                       | 660,047            |
++---------+--------------------+-------------------------+--------------------+
+| Total   | 7,372,557 (92.75%) | 576,191 (7.25%)         | 7,948,748 (100%)   |
++---------+--------------------+-------------------------+--------------------+</code></pre>
+<h3 id="analytical-insights">Analytical Insights:</h3>
+<ul>
+<li>Between 02:00 and 09:00 UTC, the network operated at a steady
+baseline of <span class="math inline">\(\approx 815,000\)</span> benign
+flows per hour.</li>
+<li>At 10:00 UTC, total flows spiked by <strong><span
+class="math inline">\(+56.4\%\)</span></strong> to <span
+class="math inline">\(1,305,340\)</span> flows, driven by <span
+class="math inline">\(423,621\)</span> LOIC HTTP requests.</li>
+<li>The assault persisted until roughly 11:45 UTC, after which traffic
+returned to baseline levels.</li>
+</ul>
+<hr />
+<h2 id="botnet-fleet-infrastructure-target-analysis">4. Botnet Fleet
+Infrastructure &amp; Target Analysis</h2>
+<p>The attacking infrastructure consisted of a coordinated botnet
+composed of 10 external AWS EC2 nodes targeting the victim web
+server:</p>
+<figure>
+<img src="figures/fig2_botnet_distribution.png"
+alt="Figure 2: Botnet Distribution" />
+<figcaption aria-hidden="true">Figure 2: Botnet
+Distribution</figcaption>
+</figure>
+<pre><code>+--------------------+--------------------+-----------------------+--------------------+
+| Attacker Source IP | Target Destination | Target Port / Proto   | Attack Flows Sent  |
++--------------------+--------------------+-----------------------+--------------------+
+| 18.219.9.1         | 172.31.69.25       | Port 80 / TCP         | 58,532             |
+| 18.218.229.235     | 172.31.69.25       | Port 80 / TCP         | 58,398             |
+| 52.14.136.135      | 172.31.69.25       | Port 80 / TCP         | 58,137             |
+| 18.218.55.126      | 172.31.69.25       | Port 80 / TCP         | 57,998             |
+| 18.216.200.189     | 172.31.69.25       | Port 80 / TCP         | 57,991             |
+| 18.216.24.42       | 172.31.69.25       | Port 80 / TCP         | 57,644             |
+| 18.219.5.43        | 172.31.69.25       | Port 80 / TCP         | 57,611             |
+| 18.218.11.51       | 172.31.69.25       | Port 80 / TCP         | 57,444             |
+| 18.219.32.43       | 172.31.69.25       | Port 80 / TCP         | 57,139             |
+| 18.218.115.60      | 172.31.69.25       | Port 80 / TCP         | 55,297             |
++--------------------+--------------------+-----------------------+--------------------+
+| Aggregated Fleet   | 172.31.69.25       | Port 80 (TCP + UDP)   | 576,191            |
++--------------------+--------------------+-----------------------+--------------------+</code></pre>
+<h3 id="benign-traffic-profile-comparison">Benign Traffic Profile
+Comparison</h3>
+<p>In contrast to the single-destination focus of the DDoS botnet,
+benign enterprise traffic exhibits natural multi-service dispersion: -
+<strong>DNS Services:</strong> <code>172.31.0.2</code> on Port 53 (<span
+class="math inline">\(2,457,307\)</span> flows — <span
+class="math inline">\(33.3\%\)</span> of all benign traffic). -
+<strong>AWS Instance Metadata Service:</strong>
+<code>169.254.169.254</code> on Port 80 (<span
+class="math inline">\(549,148\)</span> flows). - <strong>Internal
+Loopback / Direct Routing:</strong> <code>8.0.6.4</code> on Port 0
+(<span class="math inline">\(93,775\)</span> flows). - <strong>External
+Web &amp; CDN:</strong> Diverse external IPs across ports 80, 443
+(HTTPS), and 5355 (LLMNR).</p>
+<hr />
+<h2 id="statistical-profile-feature-discriminant-analysis">5.
+Statistical Profile &amp; Feature Discriminant Analysis</h2>
+<p>To understand why LOIC-HTTP is so distinct, we compare the key
+statistical parameters of Benign flows versus DDoS LOIC-HTTP flows:</p>
+<pre><code>+------------------------+---------------------------+---------------------------+
+| Network Feature        | Benign Flows (Mean ± Std) | DDoS LOIC (Mean ± Std)    |
++------------------------+---------------------------+---------------------------+
+| Destination Port       | 7,426.44 ± 17,489.82      | 80.00 ± 0.00              |
+| Protocol               | 9.39 ± 5.26               | 6.00 ± 0.00 (TCP)         |
+| Flow Duration (μs)     | 15,948,000 ± 35,560,000   | 1,277,889 ± 318,649       |
+| Total Forward Packets  | 6.85 ± 77.83              | 3.00 ± 0.00               |
+| Total Backward Packets | 8.87 ± 168.31             | 4.00 ± 0.00               |
+| Total Fwd Length (B)   | 537.40 ± 3,412.10         | 20.00 ± 0.00              |
+| Total Bwd Length (B)   | 4,892.12 ± 214,800.0      | 964.00 ± 0.00             |
+| Mean Packet Length (B) | 84.69 ± 124.24            | 123.00 ± 0.00             |
+| Fwd Header Length (B)  | 135.78 ± 1,648.83         | 72.00 ± 0.00              |
+| Bwd Header Length (B)  | 183.90 ± 3,367.89         | 92.00 ± 0.00              |
+| Init Fwd Win Bytes     | 4,606.83 ± 9,480.46       | 8,192.00 ± 0.00           |
+| Init Bwd Win Bytes     | 7,655.56 ± 19,876.56      | 211.00 ± 0.00             |
+| Active Data Packets    | 2.29 ± 4.18               | 1.00 ± 0.00               |
+| TCP RST Flag Count     | 0.0526 ± 0.2232           | 1.00 ± 0.00               |
+| TCP PSH Flag Count     | 0.3809 ± 0.4856           | 1.00 ± 0.00               |
+| TCP ACK Flag Count     | 0.2802 ± 0.4491           | 0.00 ± 0.00               |
+| Down/Up Ratio          | 0.43 ± 0.71               | 1.00 ± 0.00               |
++------------------------+---------------------------+---------------------------+</code></pre>
+<figure>
+<img src="figures/fig5_feature_distributions.png"
+alt="Figure 5: Feature Distributions" />
+<figcaption aria-hidden="true">Figure 5: Feature
+Distributions</figcaption>
+</figure>
+<h3 id="forensic-interpretation">Forensic Interpretation:</h3>
+<ol type="1">
+<li><strong>Zero Variance in Attack Features:</strong> Note that for 12
+key flow metrics, the DDoS standard deviation is literally <strong><span
+class="math inline">\(0.00\)</span></strong>.</li>
+<li><strong>The 3/4 Packet Rhythm:</strong> LOIC opens a TCP three-way
+handshake (<code>SYN</code>, <code>SYN-ACK</code>, <code>ACK</code>),
+dispatches a single raw <code>GET / HTTP/1.1\r\nHost: ...</code>
+request, receives a single HTTP response (length <span
+class="math inline">\(964\)</span> bytes), and immediately tears down
+the connection or resets it (<code>RST=1</code>).</li>
+<li><strong>The 8,192-Byte Window Hallmark:</strong> Default Windows/C#
+socket buffers allocate exactly <span
+class="math inline">\(8,192\)</span> bytes for initial forward TCP
+windows. The victim web server, under heavy memory saturation, responds
+with a throttled window size of exactly <span
+class="math inline">\(211\)</span> bytes.</li>
+<li><strong>Correlation Structure:</strong> As visualized below, the
+multi-packet and flag features exhibit strong collinear blocks, allowing
+low-dimensional projections to preserve almost all discriminatory
+variance.</li>
+</ol>
+<figure>
+<img src="figures/fig7_correlation_matrix.png"
+alt="Figure 7: Correlation Matrix" />
+<figcaption aria-hidden="true">Figure 7: Correlation Matrix</figcaption>
+</figure>
+<hr />
+<h2 id="dimensionality-reduction-manifold-analysis">6. Dimensionality
+Reduction &amp; Manifold Analysis</h2>
+<p>To explore whether benign and DDoS traffic can be separated without
+supervision, we project standardized 72-dimensional flow feature vectors
+into lower-dimensional manifolds using <strong>Principal Component
+Analysis (PCA)</strong> and <strong>t-Distributed Stochastic Neighbor
+Embedding (t-SNE)</strong>.</p>
+<h3 id="principal-component-analysis-pca">6.1 Principal Component
+Analysis (PCA)</h3>
+<p>Let <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{n \times
+d}\)</span> be the zero-mean, unit-variance standardized flow matrix
+(<span class="math inline">\(d = 72\)</span>). The covariance matrix
+<span class="math inline">\(\mathbf{\Sigma} = \frac{1}{n} \mathbf{X}^T
+\mathbf{X}\)</span> is decomposed via spectral eigendecomposition: <span
+class="math display">\[\mathbf{\Sigma} \mathbf{v}_i = \lambda_i
+\mathbf{v}_i\]</span></p>
+<p>The top three eigenvalues yield: - <strong>PC1:</strong> Explains
+<strong><span class="math inline">\(20.17\%\)</span></strong> of total
+variance. Primary loadings: packet length statistics
+(<code>Pkt Len Mean</code>, <code>Pkt Size Avg</code>,
+<code>Bwd Seg Size Avg</code>). - <strong>PC2:</strong> Explains
+<strong><span class="math inline">\(16.57\%\)</span></strong> of total
+variance. Primary loadings: TCP flag combinations
+(<code>RST Flag Cnt</code>, <code>ECE Flag Cnt</code>,
+<code>PSH Flag Cnt</code>, <code>Fwd IAT Max</code>). -
+<strong>PC3:</strong> Explains <strong><span
+class="math inline">\(11.63\%\)</span></strong> of total variance.
+Primary loadings: backward volumetric features
+(<code>TotLen Bwd Pkts</code>, <code>Subflow Bwd Byts</code>,
+<code>Bwd Header Len</code>). - <strong>Cumulative 3-Component
+Variance:</strong> <strong><span
+class="math inline">\(48.37\%\)</span></strong>.</p>
+<figure>
+<img src="figures/fig3_pca_clusters.png"
+alt="Figure 3: PCA Cluster Projections" />
+<figcaption aria-hidden="true">Figure 3: PCA Cluster
+Projections</figcaption>
+</figure>
+<p>In the 2D projection above, the Benign traffic (blue) disperses
+widely according to varying packet sizes and application protocols. The
+DDoS attacks (red) compress into an extremely concentrated linear ridge
+on the lower boundary of PC2 due to their identical flag counts and
+fixed packet sizes.</p>
+<h3 id="t-sne-non-linear-manifold-projection">6.2 t-SNE Non-Linear
+Manifold Projection</h3>
+<p>t-SNE minimizes the Kullback-Leibler divergence between
+high-dimensional joint probabilities <span
+class="math inline">\(p_{ij}\)</span> and low-dimensional Student-t
+probabilities <span class="math inline">\(q_{ij}\)</span>: <span
+class="math display">\[KL(P || Q) = \sum_i \sum_j p_{ij} \log
+\frac{p_{ij}}{q_{ij}}\]</span></p>
+<figure>
+<img src="figures/fig4_tsne_clusters.png"
+alt="Figure 4: t-SNE Non-Linear Manifold" />
+<figcaption aria-hidden="true">Figure 4: t-SNE Non-Linear
+Manifold</figcaption>
+</figure>
+<p>On a perplexity setting of 30, t-SNE resolves the data into clear
+clusters: 1. <strong>The LOIC Island:</strong> All DDoS flows condense
+into a solitary, isolated cluster island with virtually zero internal
+dispersion. 2. <strong>The Benign Archipelago:</strong> Normal traffic
+splits into distinct functional sub-clusters: - DNS query/response
+bursts (<code>port 53</code>) - AWS local metadata polls
+(<code>169.254.169.254:80</code>) - HTTPS encrypted sessions
+(<code>port 443</code>) - Zero-payload TCP control messages
+(<code>SYN</code> scans and connection tear-downs)</p>
+<hr />
+<h2 id="unsupervised-clustering-validation">7. Unsupervised Clustering
+&amp; Validation</h2>
+<p>We evaluate unsupervised <strong>K-Means Clustering</strong> across
+<span class="math inline">\(k \in \{2, 3, 4, 5\}\)</span> to test
+whether an anomaly detection system can detect the DDoS attack without
+prior labeled signatures.</p>
+<figure>
+<img src="figures/fig6_cluster_purity_heatmap.png"
+alt="Figure 6: Cluster Purity Heatmaps" />
+<figcaption aria-hidden="true">Figure 6: Cluster Purity
+Heatmaps</figcaption>
+</figure>
+<pre><code>+---------------------------------------------------------------------------------------+
+|                             CLUSTER CONTINGENCY MATRIX                                |
++--------+-----------------------+------------------------------------------------------+
+| k      | Cluster ID            | Benign Flows           | DDoS LOIC-HTTP Flows        |
++--------+-----------------------+------------------------+-----------------------------+
+| k = 2  | Cluster 0             | 18,191 (100.0%)        | 0 (0.0%)                    |
+|        | Cluster 1             | 6,809 (21.4%)          | 25,000 (78.6%)              |
++--------+-----------------------+------------------------+-----------------------------+
+| k = 3  | Cluster 0             | 3,820 (100.0%)         | 0 (0.0%)                    |
+|        | Cluster 1 (DDoS Sink) | 3,683 (12.8%)          | 25,000 (87.2%)              |
+|        | Cluster 2             | 17,497 (100.0%)        | 0 (0.0%)                    |
++--------+-----------------------+------------------------+-----------------------------+
+| k = 4  | Cluster 0 (DDoS Sink) | 3,678 (12.8%)          | 25,000 (87.2%)              |
+|        | Cluster 1             | 3,931 (100.0%)         | 0 (0.0%)                    |
+|        | Cluster 2             | 1,407 (100.0%)         | 0 (0.0%)                    |
+|        | Cluster 3             | 15,984 (100.0%)        | 0 (0.0%)                    |
++--------+-----------------------+------------------------+-----------------------------+</code></pre>
+<h3 id="clustering-performance-analysis">Clustering Performance
+Analysis:</h3>
+<ul>
+<li><strong>Zero Attack Leakage:</strong> For both <span
+class="math inline">\(k=3\)</span> and <span
+class="math inline">\(k=4\)</span>, <strong><span
+class="math inline">\(100\%\)</span> of all <span
+class="math inline">\(25,000\)</span> sampled DDoS flows</strong> group
+into a single cluster (Recall = <span
+class="math inline">\(1.00\)</span>). Not a single DDoS flow is
+misassigned to the other clusters.</li>
+<li><strong>Cluster Purity:</strong> The designated attack cluster
+achieves <strong><span class="math inline">\(87.2\%\)</span>
+purity</strong> without supervision. The remaining <span
+class="math inline">\(12.8\%\)</span> consists of benign HTTP flows to
+web servers that share similar basic TCP 3-way handshake
+characteristics.</li>
+<li><strong>Benign Decomposition:</strong> Increasing <span
+class="math inline">\(k\)</span> from 2 to 4 successfully isolates short
+DNS transactions (Cluster 2) from bulk HTTP/HTTPS flows (Cluster 3),
+demonstrating that unsupervised algorithms naturally learn network
+protocol hierarchies.</li>
+</ul>
+<hr />
+<h2 id="interactive-marimo-framework-application">8. Interactive Marimo
+Framework Application</h2>
+<p>To allow dynamic exploration of these high-dimensional clusters and
+real-time parameter tuning, an interactive notebook application was
+developed using the <strong>Marimo</strong> reactive notebook
+framework:</p>
+<ul>
+<li><strong>Source Code:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/eda_marimo.py"><code>eda/eda_marimo.py</code></a></li>
+<li><strong>Pre-rendered Standalone HTML:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/report_marimo.html"><code>eda/report_marimo.html</code></a></li>
+</ul>
+<h3 id="how-to-launch-the-interactive-marimo-app">How to Launch the
+Interactive Marimo App:</h3>
+<p>Run the following shell command in the repository workspace:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To launch in interactive editor mode:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">marimo</span> edit eda/eda_marimo.py</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or to launch as a standalone web application:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">marimo</span> run eda/eda_marimo.py</span></code></pre></div>
+<h3 id="application-capabilities">Application Capabilities:</h3>
+<ol type="1">
+<li><strong>Dynamic Cluster Configuration:</strong>
+<ul>
+<li>Interactive slider to vary <span class="math inline">\(k\)</span>
+between 2 and 5 in real time.</li>
+<li>Reactive contingency table and purity heatmap updating on every
+slider change.</li>
+</ul></li>
+<li><strong>Multi-Projection Visualization:</strong>
+<ul>
+<li><strong>PCA 2D &amp; 3D Interactive Scatter:</strong> Full rotation,
+3D panning, and zoom with camera resets.</li>
+<li><strong>t-SNE 2D Manifold:</strong> Non-linear island
+visualization.</li>
+<li><strong>Custom Feature Space (2D):</strong> Dropdowns to plot any
+pair of 12 key features (e.g. <code>Flow Duration</code> vs
+<code>TotLen Fwd Pkts</code>).</li>
+</ul></li>
+<li><strong>Dynamic Point Hover &amp; Inspection:</strong>
+<ul>
+<li>Hover tooltips expose <code>Flow ID</code>, <code>Src IP</code>,
+<code>Dst IP</code>, <code>Dst Port</code>, <code>Tot Fwd Pkts</code>,
+<code>Tot Bwd Pkts</code>, <code>Init Fwd Win Byts</code>,
+<code>Label</code>, and <code>Cluster</code>.</li>
+</ul></li>
+<li><strong>Univariate Feature Profiler:</strong>
+<ul>
+<li>Overlaid KDE histograms, box plots, and violin plots sliced by
+ground-truth labels and assigned clusters.</li>
+</ul></li>
+<li><strong>Searchable Raw Flow Table
+(<code>mo.ui.table</code>):</strong>
+<ul>
+<li>Filter flows by attack type, search by IP, and inspect protocol
+headers directly in the UI.</li>
+</ul></li>
+</ol>
+<hr />
+<h2
+id="implications-for-machine-learning-intrusion-detection-engineering">9.
+Implications for Machine Learning &amp; Intrusion Detection
+Engineering</h2>
+<h3 id="the-danger-of-model-overfitting-on-loic-artifacts">9.1 The
+Danger of Model Overfitting on LOIC Artifacts</h3>
+<p>Supervised machine learning models (Random Forests, XGBoost, Deep
+Neural Nets) trained on <code>02-20-2018.csv</code> routinely report
+<span class="math inline">\(&gt;99.9\%\)</span> F1-scores. However,
+security analysts must understand <em>why</em>: - The classifier is
+largely memorizing the exact invariant
+<code>Init Fwd Win Byts == 8192</code>, <code>Tot Fwd Pkts == 3</code>,
+and <code>Tot Bwd Pkts == 4</code>. - <strong>Evasion
+Vulnerability:</strong> A moderately sophisticated attacker modifying
+LOIC source code to randomize the TCP window size (<span
+class="math inline">\(w \sim \mathcal{U}(1024, 65535)\)</span>) and pad
+HTTP requests with random headers would evade simple decision tree
+splits.</p>
+<h3 id="robust-detection-architecture-recommendations">9.2 Robust
+Detection Architecture Recommendations</h3>
+<p>For production intrusion detection systems, a multi-tiered defense
+strategy is recommended:</p>
+<pre><code>+---------------------------------------------------------------------------------------+
+|                     RECOMMENDED MULTI-TIERED DETECTION PIPELINE                       |
++--------+-------------------------+----------------------------------------------------+
+| Tier   | Detection Mechanism     | Logic &amp; Metrics                                    |
++--------+-------------------------+----------------------------------------------------+
+| Tier 1 | Stateful Rate Limiter   | Flag when a single destination IP receives         |
+|        | &amp; Connection Tracking   | &gt; 10,000 HTTP GET flows/sec across multiple sources|
+|        | (eBPF / XDP Firewall)   | with 1 active data packet per flow.                |
++--------+-------------------------+----------------------------------------------------+
+| Tier 2 | High-Dimensional        | Project flows into PCA space; cluster density      |
+|        | Density Estimation      | estimation (HDBSCAN) flags abnormal hyper-dense    |
+|        | (Unsupervised ML)       | clusters without relying on fixed window sizes.    |
++--------+-------------------------+----------------------------------------------------+
+| Tier 3 | Behavioral Multi-Scale  | Detect botnet synchronization: 10 external IPs     |
+|        | Time-Series Analysis    | initiating simultaneous bursts within a 1-second   |
+|        |                         | sliding window.                                    |
++--------+-------------------------+----------------------------------------------------+</code></pre>
+<hr />
+<h2 id="repository-artifact-index">10. Repository Artifact Index</h2>
+<p>All generated code, models, figures, and interactive artifacts are
+cataloged below:</p>
+<ul>
+<li><strong>Marimo Interactive Application:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/eda_marimo.py"><code>eda/eda_marimo.py</code></a></li>
+<li><strong>Exported Marimo HTML App:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/report_marimo.html"><code>eda/report_marimo.html</code></a></li>
+<li><strong>Comprehensive Markdown Report:</strong> <a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/report.md"><code>eda/report.md</code></a></li>
+<li><strong>High-Resolution Figures:</strong>
+<ul>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig1_hourly_timeline.png"><code>eda/figures/fig1_hourly_timeline.png</code></a>
+— Hourly flow volume on 20/02/2018.</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig2_botnet_distribution.png"><code>eda/figures/fig2_botnet_distribution.png</code></a>
+— 10 EC2 botnet flow contributions.</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig3_pca_clusters.png"><code>eda/figures/fig3_pca_clusters.png</code></a>
+— PCA 2D projections (Ground truth vs K-Means).</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig4_tsne_clusters.png"><code>eda/figures/fig4_tsne_clusters.png</code></a>
+— t-SNE non-linear manifold showing the LOIC island.</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig5_feature_distributions.png"><code>eda/figures/fig5_feature_distributions.png</code></a>
+— Box plots of discriminant features.</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig6_cluster_purity_heatmap.png"><code>eda/figures/fig6_cluster_purity_heatmap.png</code></a>
+— Contingency purity heatmaps for <span class="math inline">\(k \in \{2,
+3, 4\}\)</span>.</li>
+<li><a
+href="file:///Users/raymond/Documents/acads/4-1/ML/Multi-Class%20Network%20Intrusion%20Detection/eda/figures/fig7_correlation_matrix.png"><code>eda/figures/fig7_correlation_matrix.png</code></a>
+— Feature correlation matrix.</li>
+</ul></li>
+<li><strong>Clean Parquet Sample (50,000 flows):</strong>
+<code>eda/clean_sample.parquet</code></li>
+<li><strong>PCA Loadings Matrix:</strong>
+<code>eda/pca_loadings.csv</code></li>
+</ul>
+</body>
+</html>
