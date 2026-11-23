@@ -529,3 +529,15 @@ def train_classifier(name, estimator, *, pool="original", prior_power=0.0, **fit
         matrix = confusion_matrix(y, model.predict(X), labels=CLASSES, sample_weight=weights)
     print(f"{name} held-out sample macro-F1 {scores(matrix)['macro_f1']:.4f}")
     save_model(model, args.output)
+
+
+def train_clustering(name, output_name, model):
+    args = training_args(f"Fit {name}.", output_name)
+    data = read_pool(args.cache)
+    X, y = data["X"], data["y"]
+    fit = training_indices(y, np.ones(len(y), dtype=bool), SEED + 18)
+    sample = np.random.default_rng(SEED + 17).choice(len(y), 2_000, replace=False)
+    with threadpool_limits(limits=2):
+        preprocessing = FlowFeatures(scale=True).fit(X[fit])
+        model.fit(preprocessing.transform(X[sample]))
+    save_model({"preprocessing": preprocessing, "model": model}, args.output)
