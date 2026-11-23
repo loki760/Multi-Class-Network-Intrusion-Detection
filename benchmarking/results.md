@@ -8,7 +8,7 @@ The [benchmark notebook](intrusion_detection_frozen.ipynb) fits the frozen ensem
 2. In a Python 3.12 environment, install the benchmark packages and JupyterLab from the repository root.
 
    ```sh
-   python -m pip install -r benchmarking/requirements.txt jupyterlab
+   python -m pip install -r requirements.txt jupyterlab
    ```
 
 3. Open [the notebook](intrusion_detection_frozen.ipynb) in JupyterLab and run all cells. The full evaluation scores 3,439,552 held-out flows and uses about 520 MB of temporary storage.
