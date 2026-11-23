@@ -1,6 +1,6 @@
 # Multiclass intrusion detection benchmark
 
-The [benchmark notebook](intrusion_detection_frozen.ipynb) fits the frozen ensemble and the selected classifier-family configurations. It also recomputes the log-byte regression and clustering comparisons. The notebook includes the configuration values, grouped data split, evaluation code, and saved outputs.
+The [benchmark notebook](../benchmarking/intrusion_detection_frozen.ipynb) fits the frozen ensemble and the selected classifier-family configurations. It also recomputes the log-byte regression and clustering comparisons. The notebook includes the configuration values, grouped data split, evaluation code, and saved outputs.
 
 ## Reproduce the benchmark
 
@@ -11,7 +11,7 @@ The [benchmark notebook](intrusion_detection_frozen.ipynb) fits the frozen ensem
    python -m pip install -r requirements.txt jupyterlab
    ```
 
-3. Open [the notebook](intrusion_detection_frozen.ipynb) in JupyterLab and run all cells. The full evaluation scores 3,439,552 held-out flows and uses about 520 MB of temporary storage.
+3. Open [the notebook](../benchmarking/intrusion_detection_frozen.ipynb) in JupyterLab and run all cells. The full evaluation scores 3,439,552 held-out flows and uses about 520 MB of temporary storage.
 
 ## Full held-out comparison
 
@@ -22,3 +22,7 @@ The [benchmark notebook](intrusion_detection_frozen.ipynb) fits the frozen ensem
 | Benign false alerts | 74,969 | 5,636 | 71,910 | 5,487 |
 
 The saved macOS run rebuilt the fixed split and class counts. Some classifier scores differ from the results bundle. The notebook lists the recomputed and reported values for the overall, per-classifier, regression, and clustering comparisons.
+
+The classifier-family results use a shared sample of 63,290 held-out flows. The table above uses the full holdout. The [scores table](scores.csv) includes classifier, regression, and clustering results from the saved notebook run.
+
+![Class F1 on the full holdout](comparison.png)
